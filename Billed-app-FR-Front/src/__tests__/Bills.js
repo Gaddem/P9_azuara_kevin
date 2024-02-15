@@ -56,4 +56,27 @@ describe("Given I am connected as an employee", () => {
       expect(modale).toBeTruthy()
     })
   })
+
+  describe('When I am on Bills Page and I click on the icon eye', () => {
+    test('A modal should open', async() => {
+      Object.defineProperty(window, 'localStorage', { value: localStorageMock })
+      window.localStorage.setItem('user', JSON.stringify({
+        type: 'Employee'
+      }))
+      document.body.innerHTML = BillsUI({ data:[bills[0]] })
+      const store=null
+      new Bills({
+        document, onNavigate, store, localStorage: window.localStorage
+      })
+      const eye = screen.getByTestId('icon-eye')
+      userEvent.click(eye);
+      const closeButton = screen.getByTestId('closeModal');
+      userEvent.click(closeButton);
+      console.log(closeButton)
+      const modale = screen.getByTestId('modaleFile');
+      expect(modale.style.display).not.toBe("block");
+    })
+  })
+
+  
 })

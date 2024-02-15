@@ -151,7 +151,7 @@ describe("Given I am connected as an employee", () => {
     let res = mockStore.bills(() => {
       return {
         list : () =>  {
-          return Promise.reject(new Error("Erreur 50"))
+          return Promise.reject(new Error("Erreur 500"))
         }
     }})
 

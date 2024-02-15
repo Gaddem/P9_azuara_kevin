@@ -5,6 +5,7 @@ import LoadingPage from "./LoadingPage.js"
 import Actions from './Actions.js'
 
 const row = (bill) => {
+  console.log(bill)
   return (`
     <tr>
       <td>${bill.type}</td>
@@ -31,7 +32,7 @@ export default ({ data: bills, loading, error }) => {
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLongTitle">Justificatif</h5>
-            <button id='close_modal' type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <button id='close_modal' data-testid="closeModal" type="button" class="close" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
