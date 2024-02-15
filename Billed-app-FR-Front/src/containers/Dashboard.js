@@ -88,6 +88,7 @@ export default class {
   handleEditTicket(e, bill, bills) {
     if (this.counter === undefined || this.id !== bill.id) this.counter = 0
     if (this.id === undefined || this.id !== bill.id) this.id = bill.id
+    console.log('counter handleEditTicket :',this.counter,' id: ',this.id )
     if (this.counter % 2 === 0) {
       bills.forEach(b => {
         $(`#open-bill${b.id}`).css({ background: '#0D5AE5' })
@@ -103,7 +104,7 @@ export default class {
         <div id="big-billed-icon" data-testid="big-billed-icon"> ${BigBilledIcon} </div>
       `)
       $('.vertical-navbar').css({ height: '120vh' })
-      this.counter ++
+      this.counter --
     }
     $('#icon-eye-d').click(this.handleClickIconEye)
     $('#btn-accept-bill').click((e) => this.handleAcceptSubmit(e, bill))
@@ -131,26 +132,31 @@ export default class {
   }
 
   handleShowTickets(e, bills, index) {
-    if (this.counter === undefined || this.index !== index) this.counter = 0
-    if (this.index === undefined || this.index !== index) this.index = index
-    if (this.counter % 2 === 0) {
-      $(`#arrow-icon${this.index}`).css({ transform: 'rotate(0deg)'})
-      $(`#status-bills-container${this.index}`)
-        .html(cards(filteredBills(bills, getStatus(this.index))))
-      this.counter ++
-    } else {
-      $(`#arrow-icon${this.index}`).css({ transform: 'rotate(90deg)'})
-      $(`#status-bills-container${this.index}`)
-        .html("")
-      this.counter ++
+
+    
+    if (!this.openedDivs) {
+      this.openedDivs = {}; // Objet contenant [index de la div ouverte]:true || false
     }
-
+  
+    if (!this.openedDivs[index]) {
+      this.openedDivs[index] = false; // Initialisation pour les index au cas où
+    }
+  
+    if (!this.openedDivs[index]) {
+      $(`#arrow-icon${index}`).css({ transform: 'rotate(0deg)'});
+      $(`#status-bills-container${index}`).html(cards(filteredBills(bills, getStatus(index))));
+      this.openedDivs[index] = true;
+    } else {
+      $(`#arrow-icon${index}`).css({ transform: 'rotate(90deg)'});
+      $(`#status-bills-container${index}`).html("");
+      this.openedDivs[index] = false;
+    }
+  
     bills.forEach(bill => {
-      $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
-    })
-
-    return bills
-
+      $(`#open-bill${bill.id}`).off('click').on('click', (e) => this.handleEditTicket(e, bill, bills));
+    });
+  
+    return bills;
   }
 
   getBillsAllUsers = () => {
